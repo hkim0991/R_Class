@@ -1,0 +1,34 @@
+---
+title: "0419_ggplot2_exercies02"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(ggthemes)
+```
+
+```{r}
+dim(diamonds)
+str(diamonds)
+```
+
+```{r}
+ggplot(diamonds, aes(x=carat, y=price, colour=clarity)) +
+         geom_point() +
+         theme_wsj()
+```
+
+```{r}
+g1 <- ggplot(diamonds, aes(x=depth, y=price, colour=color))
+g2 <- geom_point(size=1)
+g3 <- geom_line(size=0.5)
+g4 <- facet_grid(.~cut)
+g1 + g2 + g3 + g4
+
+```
+

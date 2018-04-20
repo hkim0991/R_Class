@@ -1,0 +1,76 @@
+---
+title: "0413_ML01"
+author: "180212_my"
+date: "2018년 4월 13일"
+output: html_document
+---
+
+```{r}
+head(iris)
+```
+
+## Split train/test data from the original dataset
+```{r}
+iris_train <- iris[1:105, ]
+iris_test <- iris[106:150, ]
+
+dim(iris_train) ; dim(iris_test)
+```
+
+## Use the sample() in order to better devide train/test data
+```{r}
+idx <- sample(1:nrow(iris), size=nrow(iris)*0.7, replace=F)
+iris_train2 <- iris[idx, ]
+iris_test2 <- iris[-idx, ]
+
+dim(iris_train2) ; dim(iris_test2)
+```
+
+## Is train data selected correctly? The target variable is "Species"
+```{r}
+table(iris_train2$Species)  
+# Target variable in the train data has not equally selected from each species group
+# We need to consider the distribution of the target variable's feature in order to better have the train data.  
+```
+
+## to select the train data correctly : 01. createDataPartition() from caret package
+```{r}
+library(caret)
+idx_tr <- createDataPartition(iris$Species, p=0.7, list = F)
+iris_train3 <- iris[idx_tr, ]
+iris_test3 <- iris[-idx_tr, ]
+
+table(iris_train3$Species)
+```
+
+## to select the train data correctly : 02. sampleBy() from doBy package
+```{r}
+install.packages("doBy")
+library(doBy)
+sampleBy(frac=0.7, replace=F, iris$Species, sytstematic=T)
+
+## this function is not found..
+```
+
+## With the right train set, apply Navie Bayes model
+```{r}
+library(e1071)
+
+?naiveBayes
+
+naive.result <- naiveBayes(iris_train3, iris_train3$Species, laplace=1)
+naive.pred <- predict(naive.result, iris_test3, type="class")
+```
+
+## Comparison between predicted and actual data
+```{r}
+table(naive.pred, iris_test3$Species)
+
+library(caret)
+confusionMatrix(naive.pred, iris_test3$Species)
+```
+
+```{r}
+
+```
+

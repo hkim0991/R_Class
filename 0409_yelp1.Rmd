@@ -1,0 +1,104 @@
+---
+title: "0409_yelp"
+author: "180212_my"
+date: "2018년 4월 9일"
+output: html_document
+---
+```{r}
+Sys.setlocale(category = "LC_CTYPE", locale = "C")
+df <- read.csv("yelp/yelp_business.csv", na.string = c("NA", ""), stringsAsFactors = F)
+dfp1 <- read.csv("yelp/yelp_business_part1.csv", na.string = c("NA", ""), stringsAsFactors = F)
+```
+
+```{r}
+df_b <- df
+dim(df)
+dim(dfp1)
+```
+
+```{r}
+colnames(df_b)
+```
+
+```{r}
+colSums(is.na(df_b))
+```
+```{r}
+sapply(df, function(df) {
+  sum(is.na(df)==TRUE)
+})
+```
+
+```{r}
+sapply(df, function(df) {
+  sum(is.na(df)==TRUE)/length(df)
+})
+```
+```{r}
+sapply(df, function(df) {
+  prop.table(is.na(df)==TRUE)
+})
+```
+
+```{r}
+summary(df_b)
+```
+
+```{r}
+library("Amelia")
+missmap(df_b)
+```
+```{r}
+df[is.na(df$city),5] = "Edinburgh"
+df[146525,]
+```
+
+```{r}
+table(df$city)
+table(df$state)
+```
+
+```{r}
+df[is.na(df$state),"state"] = "NV" 
+df[52816,]
+```
+
+```{r}
+sapply(df, function(df) {
+  sum(is.na(df)==TRUE)
+})
+```
+
+```{r}
+head(df$categories)
+is(df$categories)
+```
+
+```{r}
+c_split <- strsplit(df$categories, ";")
+head(c_split)
+dfc2 = unlist(c_split)
+length(dfc2)
+```
+
+```{r}
+table(dfc2)
+length(table(dfc2))
+```
+
+```{r}
+sort(table(dfc2), decreasing=TRUE)
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+

@@ -1,0 +1,248 @@
+---
+title: "Untitled"
+author: "180212_my"
+date: "2018년 4월 12일"
+output: html_document
+---
+
+## 01. basic graphs to know better about the distribution of variables
+<pre>
+Scatterplat (between two variables)
+
+Histogram : continuous variable 
+Barplot : categorical variable
+Boxplot : continous
+</pre>
+
+## 02. plot(base), ggplot2 pacakge, rCharts pacakge
+<pre>
+base plot: to explore the data fast
+ggplot2: to have the more sophisticated graph
+rCharts(d3, javascript): graph for report 
+</pre>
+
+## 03. high-level plotting functions & low-level plotting functions
+
+```{r}
+setwd("C:\\Users\\202-22\\Documents\\R\\R2_Project\\R_Studio_exercise")
+df <- read.csv("data/R2_examples/example_studentlist.csv")
+df
+```
+
+```{r}
+plot(df$age)
+```
+
+```{r}
+par(mfrow=c(1,2))
+plot(df$height, df$weight)
+plot(df$weight~df$height)
+```
+
+```{r}
+par(mfrow=c(1,2))
+plot(df$height, df$sex)
+plot(df$sex, df$height)  # values of height grouped by sex (categorical variables)
+```
+
+```{r}
+df2 <- data.frame(df$age, df$height, df$weight) 
+plot(df2) ## for the plot(), dataset should be in the data.frame format
+```
+
+```{r}
+par(mfrow=c(1,2))
+plot(df$weight~df$height)
+plot(df$weight~df$height, pch=as.integer(df$sex))
+```
+
+```{r}
+plot(df$weight~df$height, pch=as.integer(df$sex))
+legend("topleft", c("남", "여"), pch=df$sex)
+```
+
+## coplot()
+
+```{r}
+coplot(df$weight~df$height | df$sex)
+```
+
+```{r}
+plot(df$weight~df$height, ann=FALSE)
+title(main="A와 B의 몸무게와 키의 상관관계")
+title(xlab="키", ylab="몸무게")
+grid()
+
+w_mean <- mean(df$weight)
+h_mean <- mean(df$height)
+abline(v=h_mean, col="red")
+abline(h=w_mean, col="blue")
+```
+
+```{r}
+tbl_blood <- table(df$bloodtype)
+tbl_blood
+barplot(df$bloodtype)
+is(df$bloodtype)
+
+barplot(tbl_blood)
+title(main="혈액형별 빈도수")
+title(xlab="혈액형", ylab="빈도수")
+
+```
+
+```{r}
+mean(tbl_blood) 
+
+height_blood_mean <- tapply(df$height, df$bloodtype, mean)
+height_blood_mean
+barplot(height_blood_mean)
+```
+
+```{r}
+par(mfrow=c(1,2))
+boxplot(df$height~df$bloodtype)  # boxplog(target value=height~group by = bloodtype)
+plot(df$bloodtype, df$height)
+```
+
+```{r}
+boxplot(df$height~df$weight)
+```
+
+```{r}
+range(df$height)
+
+par(mfrow=c(1,2))
+hist(df$height)
+hist(df$height, breaks=10) # divided 10 groups from top to botton
+
+
+hist(df$height, prob=T)  # prob=TRUE: show densities instead of frequencies
+lines(density(df$height), col="red")
+```
+
+```{r}
+hist(df$height, breaks=10, prob=T)
+BPoint = seq(min(df$height), max(df$height)+7, by = 7)
+BPoint
+hist(df$height, breaks=BPoint)
+```
+
+```{r}
+BPoint = seq(min(df$height), max(df$height)+5, by = 5)
+BPoint
+hist(df$height, breaks=BPoint)
+```
+
+```{r}
+BPoint = seq(min(df$height), max(df$height)+10, by = 10)
+BPoint
+hist(df$height, breaks=BPoint)
+```
+
+## draw 6 graphs in a 2 rows x 3 columns frame
+
+```{r}
+b_table <- table(df$bloodtype)
+
+par(mfrow=c(2,3))
+plot(df$height, df$weight)
+boxplot(df$weight~df$sex)
+barplot(b_table)
+boxplot(df$height)
+boxplot(df$height~df$bloodtype)
+hist(df$height, breaks=5, prob=T)
+
+```
+
+```{r}
+TS1 <- c(round(runif(30)*100))
+TS2 <- c(round(runif(30)*100))
+TS3 <- c(round(runif(30)*100))
+
+plot(TS1, type="l")
+lines(TS2, col="red", lty="dashed")
+lines(TS3, col="blue", lty="dashed")
+legend("topright", c(TS1, TS2, TS3), pch)
+```
+
+```{r}
+par(mfrow=c(4,2))
+plot(df$weight, type="p")
+plot(df$weight, type="l")
+plot(df$weight, type="b")
+plot(df$weight, type="o")
+plot(df$weight, type="s")
+plot(df$weight, type="S")
+plot(df$weight, type="c")
+plot(df$weight, type="h")
+
+
+```
+
+```{r}
+library(ggplot2)
+library(ggthemes)
+```
+
+```{r}
+dim(diamonds)
+str(diamonds)
+head(diamonds)
+summary(diamonds)
+```
+
+```{r}
+ggplot(diamonds)  # no results
+
+ggplot(diamonds, aes(x=diamonds$carat, y=diamonds$price,
+       colour = diamonds$clarity)) + geom_point() + theme_wsj()
+```
+## adventage of ggplot2 is that you can split the features and add/modify them
+```{r}
+g1 <- ggplot(diamonds, aes(x=diamonds$carat, y=diamonds$price,
+       colour = diamonds$clarity)) 
+g2 <- geom_point()
+g3 <- theme_wsj()
+
+g1+g2+g3
+
+```
+
+```{r}
+ggplot(df, aes(x=df$weight, y=df$height, colour = df$bloodtype)) +
+  geom_line() + geom_point(size=3) + facet_grid(.~sex)
+```
+
+```{r}
+ggplot(df, aes(x=df$weight, y=df$height)) + geom_line(aes(colour = df$bloodtype)) + geom_point(aes(colour = df$bloodtype, size=3)) + facet_grid(.~sex)
+```
+
+```{r}
+ggplot(mtcars, aes(x=disp, y=mpg)) + geom_line() + geom_point(size=3) + facet_grid(.~gear)
+```
+
+```{r}
+ggplot(df, aes(x=bloodtype, fill=sex)) + geom_bar(position="dodge", width=1) 
+```
+
+```{r}
+ggplot(df, aes(x=bloodtype, fill=sex)) + geom_bar(position="dodge", width=1) 
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+

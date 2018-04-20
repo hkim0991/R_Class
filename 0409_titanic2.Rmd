@@ -1,0 +1,188 @@
+---
+title: "Untitled"
+author: "180212_my"
+date: "2018년 4월 9일"
+output: html_document
+---
+
+```{r}
+tr <- read.csv("titanic/train.csv", na.strings=c("NA", ""), stringsAsFactors = F)
+str(tr)
+```
+
+```{r}
+tr$Survived <- as.factor(tr$Survived)
+tr$Pcalss <- as.factor(tr$Pclass)
+str(tr)
+tr$Survived
+```
+
+```{r}
+colSums(is.na(tr))
+```
+
+```{r}
+colSums(prop.table(is.na(tr)))
+```
+
+```{r}
+table(tr$Embarked, useNA="always")
+```
+
+## location of missing value
+```{r}
+which(is.na(tr$Embarked))
+```
+
+```{r}
+tr$Embarked[which(is.na(tr$Embarked))] = 'S'
+table(tr$Embarked, useNA="always")
+```
+
+```{r}
+tr_a <- tr
+class(tr_a$Name)
+tr_a$Name = as.character(tr_a$Name)
+tr_words=table(unlist(strsplit(tr$Name,"\\s+")))
+
+
+# sort(tr_words[grep('\\.',names(tr_words))], decreasing=TRUE)
+grep('\\.',names(tr_words))
+
+tr_words[grep('\\.',names(tr_words))]
+sort(tr_words[grep('\\.',names(tr_words))] , decreasing=TRUE)
+
+```
+
+```{r}
+library(stringr)
+td = tr
+td_age = tr$Age
+td_name1 <- str_match(td$Name, "[a-zA-Z]+\\.")
+dat = cbind(tr$Name,td_name1)
+dat
+```
+
+```{r}
+saveRDS(td, "titanic_td.RDS")
+
+td <- readRDS("titanic_td.RDS")
+head(td)
+```
+
+```{r}
+
+```
+
+```{r}
+# Survived barplot
+barplot(table(td$Survived),
+        xlab='Survived',
+        names=c('Perished', 'Survived'),
+        main='Survival')
+```
+
+```{r}
+# Pclass barplot
+barplot(table(td$Pclass),
+        xlab='Pclass',
+        names=c('First Class', 'Second Class', 'Third Class'),
+        main='Barplot of Pclass')
+```
+```{r}
+hist(td$Age, main="age", xlab="Age")
+
+hist(td$Fare, main="Passenger Fare", xlab = "Fare")
+
+```
+
+```{r}
+counts = table(td$Survived, td$Sex)
+barplot(counts, col=c("darkblue","red"), legend = c("Perished","Survived"),
+main = "Passenger Survival by Sex")
+
+```
+
+```{r}
+counts = table(td$Survived, td$Pclass)
+barplot(counts, col=c("darkblue","red"), legend = c("Perished","Survived"),
+main = "Passenger Survival by Pclass")
+
+```
+
+```{r}
+par(mfrow=c(1,2))
+counts = table(td$Sex, td$Pclass)
+barplot(counts, col=c("darkblue","red"), legend = c("Female","Male"),
+main = "Passenger Sex by Pclass")
+counts = table(td$Survived, td$Pclass)
+barplot(counts, col=c("darkblue","green"), legend = c("Perished","Survived"),
+main = "Passenger Survived by Pclass")
+
+```
+
+## decesion tree
+```{r}
+split.data = function(data, p = 0.7, s = 555) {
+  set.seed(s)
+  len1 = dim(data)[1]
+             idx=sample(1:len1, size=len1 * p, replace=F)
+             train = data[idx,]
+             test = data[-idx,]
+             return(list(train = train, test = test))
+}
+```
+
+```{r}
+allset = split.data(td, p = 0.7)
+class(allset)
+trset = allset$train
+testset = allset$test
+dim(trset) ; dim(testset)
+```
+
+```{r}
+require(tree)
+
+traintree = tree(Survived ~ Pclass + Sex + Age + SibSp + Fare
+                 + Parch + Embarked, data=trset)
+plot(traintree)
+text(traintree)
+nrow(trset[trset$Sex=='male',])
+
+```
+
+```{r}
+cv.trees <- cv.tree(traintree, FUN=prune.misclass)
+plot(cv.trees)
+
+```
+
+```{r}
+prune.trees <- prune.misclass(traintree, best=7) # tree size를 4로 하여 다시 fit하기
+plot(prune.trees)
+text(prune.trees, pretty=0)
+summary(prune.trees)
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+

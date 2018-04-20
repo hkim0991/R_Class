@@ -1,0 +1,119 @@
+---
+title: "0406_titanic"
+author: "180212_my"
+date: "2018년 4월 6일"
+output: html_document
+---
+
+```{r}
+df <- read.csv("Titanic/titanic_train.csv", header = T, stringsAsFactors = F)
+head(df)
+df
+```
+
+```{r}
+str(df)
+summary(df)
+dim(df)
+```
+
+```{r}
+sum(is.na(df))
+```
+
+```{r}
+colSums(is.na(df))
+```
+
+```{r}
+library(Amelia)
+missmap(df, main="Missing Map")
+```
+```{r}
+head(df$Name, 10)
+```
+
+```{r}
+split_name <- strsplit(df$Name, split=" ")
+names <- unlist(split_name)
+```
+
+```{r}
+sort(table(names), decreasing=T)
+```
+
+```{r}
+age_na <- df[is.na(df$Age), ]
+nrow(age_na)
+```
+
+```{r}
+mrtotal <- age_na[grep("Mr.", age_na$Name), ]
+mrs_na <- mrtotal[grep("^f.", mrtotal$Sex),] ## extract "Mrs."
+mr_na <- mrtotal[grep("^m", mrtotal$Sex),]    ## extract "Mr."
+miss_na <- age_na[grep("Miss.", age_na$Name), ] ## extract "Miss."
+master_na <- age_na[grep("Master", age_na$Name), ] ## extract "Master"
+```
+
+```{r}
+df_mrmrs <- df[grep("Mr.", df$Name), ]
+df_mrs <- df_mrmrs[grep("^f", df_mrmrs$Sex), ]
+df_mr <- df_mrmrs[grep("^m", df_mrmrs$Sex), ]
+df_miss <- df[grep("Miss.", df$Name), ]
+df_master <- df[grep("Master", df$Name), ]
+
+df_Don <- df[grep("Don.", df$Name), ]
+df_Rev <- df[grep("Rev.", df$Name), ]
+df_Dr <- df[grep("Dr.", df$Name), ]
+df_Major <- df[grep("Major.", df$Name), ]
+
+```
+
+```{r}
+mrs_mean <- mean(df_mrs$Age, na.rm= TRUE)
+mr_mean <- mean(df_mr$Age, na.rm= TRUE)
+miss_mean <- mean(df_miss$Age, na.rm= TRUE)
+master_mean <- mean(df_master$Age, na.rm= TRUE)
+
+print(mrs_mean)
+print(mr_mean)
+print(miss_mean)
+print(master_mean)
+```
+```{r}
+df_mrs$Age <- ifelse(is.na(df_mrs$Age), mrs_mean, df_mrs$Age)
+df_mr$Age <- ifelse(is.na(df_mr$Age), mr_mean, df_mr$Age)
+df_miss$Age <- ifelse(is.na(df_miss$Age), miss_mean, df_miss$Age)
+df_master$Age <- ifelse(is.na(df_master$Age), master_mean, df_master$Age)
+
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+

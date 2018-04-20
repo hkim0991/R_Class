@@ -1,0 +1,7 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+R_class.Rproj
+*.csv
+titanic_td.RDS
