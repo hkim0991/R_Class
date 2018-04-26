@@ -1,0 +1,137 @@
+---
+title: "0426_logistic_regression"
+author: "180212_my"
+date: "2018년 4월 26일"
+output: html_document
+---
+
+## Example 1
+```{r}
+dt <- read.csv("C:/Users/202-22/Documents/R/R2_Project/R_Studio_exercise/data/drink.csv", header= T)
+head(dt)
+```
+
+```{r}
+str(dt)
+names(dt)
+```
+
+```{r}
+library(class)  # logistic regression package
+m <- glm(지각여부~., family=binomial(link=logit), data=dt)
+summary(m)
+```
+
+```{r}
+prev <- predict(m, dt, type="response") >= 0.5  # type="reponse": proportion 
+prev
+table(prev)
+
+prev[prev=="FALSE"] <- "N"
+prev[prev=="TRUE"] <- "Y"
+as.factor(prev)
+dt$지각여부 = factor(dt$지각여부, levels=c("Y", "N"))
+actual = dt$지각여부
+  
+```
+
+```{r}
+library(caret)
+confusionMatrix(prev, actual)
+table(actual, prev)
+search()
+
+```
+
+
+
+## Example 2
+# Load libraries
+```{r}
+library(caret)
+library(class)
+```
+
+# Load data
+```{r}
+head(mtcars)
+str(mtcars)
+mtcars$vs <- factor(mtcars$vs, levels=c(1,0))
+```
+
+
+```{r}
+data(mtcars)
+head(mtcars)
+model <- glm(formula = vs ~ wt + disp, data=mtcars, family=binomial)
+summary(model)
+```
+
+```{r}
+newdata <- data.frame(wt=2.1, disp=180)
+newdata
+```
+
+```{r}
+predict(model, newdata, type="response")  # 0<= response <=1
+```
+
+```{r}
+if(!require(ResourceSelection)){
+  install.packages("ResourceSelection", repos="http://cran.us.r-project.org")
+}
+search()
+library(ResourceSelection)
+
+# require(caret) > check if there is caret loaded in the library
+# library(caret) > show all the libraries loaded
+```
+
+```{r}
+hoslem.test(mtcars$vs, fitted(model))
+```
+```{r}
+model2 <- glm(vs ~ wt, data=mtcars, family=binomial)
+```
+
+```{r}
+range(mtcars$wt)
+```
+
+```{r}
+xweight <- seq(0, 6, 0.01)
+head(xweight)
+```
+
+```{r}
+yweight <- predict(model2, list(wt=xweight), type="response")
+yweight
+```
+
+```{r}
+plot(mtcars$wt, mtcars$vs, pch=16, xlab="Weight(g)", ylab="VS")
+lines(xweight, yweight)
+```
+
+```{r}
+model3 <- glm(vs ~ disp, data=mtcars, family=binomial)
+summary(model3)
+```
+```{r}
+range(mtcars$disp)
+```
+
+```{r}
+xdisp = seq(71, 480, 0.1)
+ydisp = predict(model3, list(disp=xdisp), type="response")
+```
+
+```{r}
+plot(mtcars$disp, mtcars$vs, pch=16, xlab="Displacement", ylab="VS")
+lines(xdisp, ydisp)
+```
+
+```{r}
+
+```
+
