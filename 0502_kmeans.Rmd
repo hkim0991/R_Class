@@ -1,0 +1,118 @@
+---
+title: "Untitled"
+author: "180212_my"
+date: "2018년 5월 2일"
+output: html_document
+---
+
+```{r}
+library(kmeans)
+library(dplyr)
+?kmeans
+```
+
+```{r}
+sns <- read.csv("C:/Users/202-22/Documents/R/R2_Project/R_Studio_exercise/20180430-20180504/snsdata.csv")
+head(sns)
+str(sns)
+```
+
+```{r}
+sns$gradyear <- as.factor(sns$gradyear)
+summary(sns)
+```
+```{r}
+table(sns$gender, sns$gradyear, useNA="ifany")
+```
+
+```{r}
+```
+
+
+# Number of missing value - colSums
+```{r}
+colSums(is.na(sns))
+
+# There are missing values in gender and age features
+# 2724 NA in gender
+# 5086 NA in age 
+```
+
+
+```{r}
+boxplot(sns$age)
+hist(sns$age)
+```
+
+```{r}
+sns %>% filter(age >20)
+```
+```{r}
+sns %>% filter(age<15)
+```
+
+```{r}
+grad2006_age <- sns %>% filter(gradyear=='2006' & !is.na(age))
+range(grad2006_age$age)
+hist(grad2006_age$age)
+```
+
+
+```{r}
+grad2007_age <- sns %>% filter(gradyear=='2007' & !is.na(age))
+range(grad2007_age$age)
+hist(grad2007_age$age)
+```
+
+```{r}
+grad2008_age <- sns %>% filter(gradyear=='2008' & !is.na(age))
+range(grad2008_age$age)
+hist(grad2008_age$age)
+```
+
+```{r}
+grad2009_age <- sns %>% filter(gradyear=='2009' & !is.na(age))
+range(grad2009_age$age)
+hist(grad2009_age$age)
+```
+
+## fill the missing value 1
+```{r}
+sns$age <- ifelse(sns$age < 13 | sns$age > 20, NA, sns$age)
+range(sns$age, na.rm=T)
+```
+
+## fill the missing value 2
+```{r}
+mean2006 <- mean(grad2006_age$age)
+mean2007 <- mean(grad2007_age$age)
+mean2008 <- mean(grad2008_age$age)
+mean2009 <- mean(grad2009_age$age)
+
+sns$age <- ifelse(sns$gradyear=='2006' & is.na(sns$age), mean2006, sns$age)
+sns$age <- ifelse(sns$gradyear=='2007' & is.na(sns$age), mean2007, sns$age)
+sns$age <- ifelse(sns$gradyear=='2008' & is.na(sns$age), mean2008, sns$age)
+sns$age <- ifelse(sns$gradyear=='2009' & is.na(sns$age), mean2009, sns$age)
+
+df$age <- ifelse(is.na(df$age), ave_age, df$age)
+
+mean(df$age, na.rm=T)
+```
+
+
+```{r}
+summary(sns$age)
+```
+
+```{r}
+interest <- sns[5:40]
+k_means_int  <- as.data.frame(lapply(interest, scale))
+```
+
+```{r}
+set.seed(1234)
+k_means <- kmeans(k_means_int, 5)
+k_means$centers
+k_means$size
+```
+

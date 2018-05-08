@@ -1,0 +1,58 @@
+---
+title: "0430_deeplearning"
+author: "180212_my"
+date: "2018년 4월 30일"
+output: html_document
+---
+
+```{r}
+library(caret)
+
+set.seed(0)
+idx <- createDataPartition(iris$Species, p=0.7, list=F)
+str(idx)
+```
+
+```{r}
+iris_tr <- iris[idx,]
+iris_test <- iris[-idx,]
+
+table(iris_tr$Species)
+table(iris_test$Species)
+```
+
+```{r}
+install.packages('nnet')
+library(nnet)
+```
+
+```{r}
+iris_tr_scale <- as.data.frame(sapply(iris_tr[, -5], scale))
+iris_test_scale <- as.data.frame(sapply(iris_test[, -5], scale))
+```
+
+```{r}
+iris_tr_scale$Species <- iris_tr$Species
+iris_test_scale$Species <- iris_test$Species
+```
+
+```{r}
+nnet.result <- nnet(Species~., iris_tr_scale, size=3)  # size = number of node in hidden layer
+nnet.pred <- predict(nnet.result, iris_test_scale, type = "class") # type= type of prediction
+```
+
+```{r}
+nnet.pred
+
+nnet.pred2 <- predict(nnet.result, iris_test_scale, type = "raw") # raw = % of each species
+nnet.pred2
+```
+
+```{r}
+confusionMatrix(nnet.pred, iris_test_scale$Species)
+```
+
+```{r}
+
+```
+

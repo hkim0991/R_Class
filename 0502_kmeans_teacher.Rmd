@@ -1,0 +1,79 @@
+---
+title: "Untitled"
+author: "180212_my"
+date: "2018년 5월 2일"
+output: html_document
+---
+
+```{r}
+teens <- read.csv("C:/Users/202-22/Documents/R/R2_Project/R_Studio_exercise/20180430-20180504/snsdata.csv")
+str(teens)
+table(teens$gender)
+table(teens$age)
+```
+
+```{r}
+table(teens$gender, useNA="ifany")
+```
+
+# copy the original data
+```{r}
+df <- teens
+```
+
+```{r}
+df$age <- ifelse(df$age >= 13 & df$age < 20, df$age, NA)
+summary(df$age)
+```
+
+```{r}
+df$female <- ifelse(df$gender=="F" & !is.na(df$gender), 1, 0)
+df$no_gender <- ifelse(is.na(df$gender), 1,0)
+
+table(df$female, useNA="ifany")
+table(df$no_gender, useNA="ifany")
+```
+
+## 04. 결측치 제외한 평균구하기 
+```{r}
+mean(df$age, na.rm=T)
+```
+
+## 05. 결측치 대체
+```{r}
+aggregate(data=df, age~gradyear, mean, na.rm=TRUE)
+ave_age <- ave(df$age, df$gradyear, FUN= function(x) mean(x, na.rm=T))
+ave_age
+
+df$age <- ifelse(is.na(df$age), ave_age, df$age)
+summary(df$age)
+
+```
+
+```{r}
+interests <- df[5:40]
+interests_z <- as.data.frame(lapply(interests, scale))
+```
+
+```{r}
+set.seed(2)
+teen_clusters <- kmeans(interests_z, 5)
+names(teen_clusters)
+```
+```{r}
+teen_clusters
+```
+
+```{r}
+head(teen_clusters$centers, 10)
+```
+
+```{r}
+teens$group <- teen_clusters$cluster
+head(teens)
+```
+
+```{r}
+
+```
+

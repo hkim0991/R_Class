@@ -1,0 +1,184 @@
+---
+title: "Untitled"
+author: "180212_my"
+date: "2018년 4월 24일"
+output: html_document
+---
+
+## ggplot practice - example 10
+
+## 01. Load library
+```{r}
+library(ggplot2)
+library(ggthemes)
+```
+
+## 02. Load data
+```{r}
+head(diamonds)
+str(diamonds)
+```
+
+## scatter plot
+```{r}
+ggplot(diamonds, aes(x, price)) + geom_point()
+```
+```{r}
+ggplot(diamonds, aes(x,price, colour=clarity)) + geom_point()
+```
+
+```{r}
+g1 <- ggplot(diamonds, aes(x, price, colour=clarity))
+g2 <- geom_point()
+g3 <- theme_solarized_2()
+
+g1+g2+g3
+```
+
+```{r}
+g2.1 <- geom_point(alpha=.1)  # transparency show where the data is converged
+
+g1 + g2.1 + g3
+
+# But in this case, we cannot clearly see the colors for lengend
+```
+```{r}
+g4 <- guides(colour=guide_legend(override.aes = list(alpha=1)))
+
+g1 + g2.1 + g3 + g4
+```
+
+```{r}
+g2.2 <- geom_hline(yintercept=mean(diamonds$price), color="turquoise3", alpha=0.8)
+
+g1 + g2.1 + g2.2 + g3 + g4 + xlim(3, 10)
+```
+
+
+## ggplot practice - example 11
+```{r}
+dt <- read.csv("C:/Users/202-22/Documents/R/R2_Project/R_Studio_exercise/data/R2_examples/example_ts.csv")
+head(dt, 24)
+str(dt)
+```
+
+```{r}
+ggplot(dt, aes(Date, Sales)) + geom_line()
+```
+
+```{r}
+g1 <- ggplot(dt, aes(x=factor(Date), y= Sales, group=1)) 
+g2 <- geom_line()
+g1 + g2
+```
+
+```{r}
+g3 <- geom_point()
+g1 + g2 + g3
+```
+
+```{r}
+g1 + g2 + g3 + theme_light()
+```
+
+```{r}
+g2.1 <- geom_line(color="orange1", size=1)
+g3.1 <- geom_point(color="orangered2", size=4)
+
+g1+ g2.1+ g3.1 + g4+ xlab("년도") + ylab("매출") + ggtitle("A기업 월별 매출")
+```
+
+## Example 12
+```{r}
+library(dplyr)  # treatement of data
+library(data.table)
+pp <- read.csv("C:/Users/202-22/Documents/R/R2_Project/R_Studio_exercise/data/R2_examples/example_population_f.csv")
+head(pp)
+pp <- pp[,-1]
+
+pp <- tbl_df(pp)
+pp
+```
+
+```{r}
+pp2 <- filter(pp, Provinces =="충청북도"| Provinces == "충청남도")
+pp2
+
+p1 <- ggplot(pp2, aes(x=City, y=Population, fill=Provinces))
+p2 <- geom_bar(stat="identity")
+p1+p2+theme_wsj()
+```
+```{r}
+p1.1 <- ggplot(pp2, aes(x=reorder(City, Population), y=Population, fill=Provinces))
+p2 <- geom_bar(stat="identity")
+p1.1 + p2 + theme_wsj()
+```
+
+```{r}
+pp3<- filter(pp, SexRatio >1, PersInHou <2)
+pp3
+```
+
+```{r}
+ggplot(pp3, aes(x=reorder(City, SexRatio), y=SexRatio, fill=Provinces)) +geom_bar(stat="identity") + theme_wsj()
+
+```
+```{r}
+filter(pp, SexRatio >1, PersInHou <2) %>% select(Provinces)
+```
+
+```{r}
+pp <- mutate(pp, SexF = ifelse(SexRatio < 1, "여자비율높음", ifelse(SexRatio >1, "남자비율 높음", "남여비율같음")))
+pp$SexF <- factor(pp$SexF)
+```
+
+```{r}
+pp$sexF <- ordered(pp$SexF, c("여자비율높음", "남여비율같음", "남자비율높음"))
+```
+
+```{r}
+pp2 <- filter(pp, Provinces=="경기도")
+
+```
+
+```{r}
+ggplot(pp2, aes(x=City, y=(SexRatio -1), fill=SexF)) +
+geom_bar(stat="identity", position="identity") +  #position = "identity" to avoid error message saying there is negative value
+theme_wsj()
+
+```
+
+```{r}
+pp_seoul <- filter(pp, Provinces=="서울특별시")
+```
+
+```{r}
+ggplot(pp_seoul, aes(x=City, y=(SexRatio -1), fill=SexF)) +
+geom_bar(stat="identity", position="identity") +  #position = "identity" to avoid error message saying there is negative value
+theme_wsj()
+```
+
+```{r}
+library('reshape2')
+```
+
+```{r}
+str(pp)
+group <- group_by(pp, Provinces)
+df2 <- summarise(group, SumPopulation=sum(Population), Male=sum(Male), Female=sum(Female))
+df2
+```
+
+```{r}
+group2 <- group_by(pp, Provinces)
+df3 <- summarise(group2, sumPopulation=sum(Population), Male=sum(Male), Female=sum(Female))
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
