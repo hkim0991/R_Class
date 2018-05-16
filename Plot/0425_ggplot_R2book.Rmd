@@ -174,11 +174,3 @@ group2 <- group_by(pp, Provinces)
 df3 <- summarise(group2, sumPopulation=sum(Population), Male=sum(Male), Female=sum(Female))
 ```
 
-```{r}
-
-```
-
-```{r}
-
-```
-
