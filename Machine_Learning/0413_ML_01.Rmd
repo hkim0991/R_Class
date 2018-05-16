@@ -70,7 +70,3 @@ library(caret)
 confusionMatrix(naive.pred, iris_test3$Species)
 ```
 
-```{r}
-
-```
-
