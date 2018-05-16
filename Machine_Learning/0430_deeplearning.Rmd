@@ -52,7 +52,3 @@ nnet.pred2
 confusionMatrix(nnet.pred, iris_test_scale$Species)
 ```
 
-```{r}
-
-```
-
