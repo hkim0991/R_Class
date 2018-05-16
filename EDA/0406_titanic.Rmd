@@ -80,40 +80,10 @@ print(mr_mean)
 print(miss_mean)
 print(master_mean)
 ```
+
 ```{r}
 df_mrs$Age <- ifelse(is.na(df_mrs$Age), mrs_mean, df_mrs$Age)
 df_mr$Age <- ifelse(is.na(df_mr$Age), mr_mean, df_mr$Age)
 df_miss$Age <- ifelse(is.na(df_miss$Age), miss_mean, df_miss$Age)
 df_master$Age <- ifelse(is.na(df_master$Age), master_mean, df_master$Age)
-
-
 ```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
