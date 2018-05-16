@@ -90,15 +90,3 @@ length(table(dfc2))
 sort(table(dfc2), decreasing=TRUE)
 ```
 
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
