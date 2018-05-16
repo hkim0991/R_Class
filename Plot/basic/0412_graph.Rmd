@@ -230,19 +230,4 @@ ggplot(df, aes(x=bloodtype, fill=sex)) + geom_bar(position="dodge", width=1)
 ggplot(df, aes(x=bloodtype, fill=sex)) + geom_bar(position="dodge", width=1) 
 ```
 
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
 
