@@ -115,4 +115,3 @@ k_means <- kmeans(k_means_int, 5)
 k_means$centers
 k_means$size
 ```
-

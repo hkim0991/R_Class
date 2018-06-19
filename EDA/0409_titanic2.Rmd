@@ -71,10 +71,6 @@ head(td)
 ```
 
 ```{r}
-
-```
-
-```{r}
 # Survived barplot
 barplot(table(td$Survived),
         xlab='Survived',
@@ -163,26 +159,6 @@ prune.trees <- prune.misclass(traintree, best=7) # tree size를 4로 하여 다�
 plot(prune.trees)
 text(prune.trees, pretty=0)
 summary(prune.trees)
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
 
 ```
 

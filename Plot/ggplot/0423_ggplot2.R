@@ -61,15 +61,6 @@ grid.arrange(p3, p4, ncol=2)
 #grid.arrange(p1, p2,p3,p4 ncol=2)
 
 
-
-
-
-
-
-
-
-
-
 tr1 <- read.csv("C:\\Users\\202-22\\Documents\\R\\R2_Project\\R_Studio_exercise\\data\\Ad_tracking\\practice\\tr_5m_st4_1.csv", stringsAsFactors = F, na.string=c("", NA))
 
 install.packages("sampling")

@@ -131,7 +131,3 @@ plot(mtcars$disp, mtcars$vs, pch=16, xlab="Displacement", ylab="VS")
 lines(xdisp, ydisp)
 ```
 
-```{r}
-
-```
-
