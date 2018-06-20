@@ -1,0 +1,91 @@
+
+```{r}
+install.packages(c('ggmap', 'grDevices'))
+library(ggmap)
+library(grDevices)
+
+setwd('C:\\Users\\202-22\\Documents\\R\\R2_Project\\R_Studio_exercise\\data\\RLoveYou')
+```
+
+```{r}
+df <- read.csv('서울시구청위치정보_new.csv', header=T)
+head(df)
+
+map <- get_map('seoul', zoom=11, maptype='roadmap')
+ggmap01 <- ggmap(map) + 
+  geom_point(data=df, aes(x=LON, y=LAT), size=3, alpha=1, color='red') +
+  geom_text(data=df, aes(x=LON, y=LAT+0.007, label=name), size=3, color='red')
+
+ggmap01
+```
+
+```{r}
+# Load the data - seoul metro line 2
+metro <- read.csv('서울지하철2호선위경도정보.csv', header=T)
+head(metro)
+
+# Data visualisation of seoul metro line 2 
+map <- get_map('seoul', zoom=12, maptype='roadmap')
+
+ggmap02 <- ggmap(map) + 
+  geom_point(data=metro, aes(x=LON, y=LAT), size=3, alpha=1, color='blue') +
+  geom_text(data=metro, aes(x=LON, y=LAT+0.007, label= 역명), size=2, color='black')
+
+ggmap02 + 
+  geom_path(data=metro, aes(x=LON, y=LAT), size=1, linetype=2, color='green')
+
+```
+
+```{r}
+# Centre alignment 
+center <- c(mean(metro$LON), mean(metro$LAT))
+map2 <- get_map(center, zoom=11, maptype='roadmap')
+
+ggmap03 <- ggmap(map2) + 
+  geom_point(data=metro, aes(x=LON, y=LAT), size=3, alpha=1, color='green') +
+  geom_text(data=metro, aes(x=LON, y=LAT+0.005, label= 역명), size=3, color='black')
+
+ggmap03
+```
+
+```{r}
+# Add another information on the map of the seoul metro line 2
+toy <- read.csv('서울시장난감도서관위치현황.csv', header=T)
+toy
+
+ggmap03 + 
+  geom_point(data=toy, aes(x=LON, y=LAT), size=3, alpha=1, color='blue') +
+  geom_text(data=toy, aes(x=LON, y=LAT+0.007, label= 이름), size=2, color='black')
+
+```
+
+```{r}
+# Draw a line between the stations in seoul metro line 3
+metro3 <- read.csv('서울지하철3호선역위경도정보.csv', header=T)
+metro3
+
+map3 <- get_map('seoul', zoom=11, maptype = 'roadmap')
+
+ggmap04 <- ggmap(map3) + 
+  geom_point(data=metro3, aes(x=LON, y=LAT), size=3, alpha=1, color='red') +
+  geom_text(data=metro3, aes(x=LON, y=LAT+0.007, label= 역명), size=2, color='black')
+
+ggmap04 + geom_path(data=metro3, aes(x=LON, y=LAT), size=1, linetype=2, color='green') +
+  geom_point(data=metro, aes(x=LON, y=LAT), size=3, alpha=1, color='blue') +
+  geom_text(data=metro, aes(x=LON, y=LAT+0.007, label= 역명), size=2, color='black')
+
+```
+
+```{r}
+# Visualize the density of population
+pp <- read.csv('지역별인구현황_2014_4월기준.csv')
+pp
+
+map4 <- get_map('South Korea', zoom = 7, maptype = 'roadmap')
+ggmap05 <- ggmap(map4) +
+  geom_point(data=pp, aes(x=LON, y=LAT, colour=총인구수, size=총인구수)) +
+  geom_text(data=pp, aes(x=LON, y=LAT-0.01, label= 지역), size=3, color='red')
+
+ggmap05
+```
+
